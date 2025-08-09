@@ -1,0 +1,136 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Broken Events Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    table {
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      width: 100px;
+      height: 80px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #60a5fa;
+      color: white;
+      text-align: center;
+    }
+    .event {
+      background-color: #60a5fa;
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .skipped {
+      background-color: #f87171;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <table id="calendar"></table>
+
+  <script>
+    const calendarEl = document.getElementById("calendar");
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0);
+    const totalDays = endDate.getDate();
+    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    // Important events
+    const allEvents = [
+      { date: 3, title: "Project Deadline" },
+      { date: 7, title: "Team Meeting" },
+      { date: 10, title: "Client Call" },
+      { date: 15, title: "Hackathon" },
+      { date: 22, title: "Company Review" },
+      { date: 28, title: "Demo Day" },
+    ];
+
+    // Randomly skip some dates (30% chance)
+    const skippedDates = [];
+    for (let i = 1; i <= totalDays; i++) {
+      if (Math.random() < 0.3) {
+        skippedDates.push(i);
+      }
+    }
+
+    // Map events
+    const eventsMap = {};
+    allEvents.forEach(e => {
+      eventsMap[e.date] = e.title;
+    });
+
+    // Create header row
+    let headerRow = "<tr>";
+    weekdays.forEach(day => {
+      headerRow += `<th>${day}</th>`;
+    });
+    headerRow += "</tr>";
+    calendarEl.innerHTML += headerRow;
+
+    // Fill calendar
+    let row = "<tr>";
+    for (let i = 0; i < startDate.getDay(); i++) {
+      row += "<td></td>";
+    }
+
+    for (let day = 1; day <= totalDays; day++) {
+      if (skippedDates.includes(day)) {
+        row += `<td class="skipped">X</td>`;
+      } else {
+        let content = `<strong>${day}</strong>`;
+        if (eventsMap[day]) {
+          content += `<div class="event">${eventsMap[day]}</div>`;
+        }
+        row += `<td>${content}</td>`;
+      }
+
+      if ((startDate.getDay() + day) % 7 === 0) {
+        row += "</tr>";
+        calendarEl.innerHTML += row;
+        row = "<tr>";
+      }
+    }
+
+    // Fill remaining cells
+    if (row !== "<tr>") {
+      while (row.split("<td").length - 1 < 7) {
+        row += "<td></td>";
+      }
+      row += "</tr>";
+      calendarEl.innerHTML += row;
+    }
+  </script>
+
+</body>
+</html>
