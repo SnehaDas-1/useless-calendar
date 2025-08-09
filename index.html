@@ -1,0 +1,101 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Useless Calendar</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, cursive;
+      text-align: center;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4081;
+    }
+    .calendar {
+      display: inline-block;
+      border: 2px dashed #ff4081;
+      padding: 20px;
+      background: #fff0f5;
+    }
+    .day-names, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 40px);
+      gap: 5px;
+    }
+    .day, .day-name {
+      padding: 5px;
+      background: #ffe4e1;
+      border: 1px solid #ff69b4;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #ffb6c1;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff69b4;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 Useless Calendar 🌸</h1>
+  <div class="calendar">
+    <div class="day-names">
+      <div class="day-name">Sun</div>
+      <div class="day-name">Mon</div>
+      <div class="day-name">Tue</div>
+      <div class="day-name">Wed</div>
+      <div class="day-name">Thu</div>
+      <div class="day-name">Fri</div>
+      <div class="day-name">Sat</div>
+    </div>
+    <div class="days" id="calendar-days"></div>
+  </div>
+
+  <button onclick="alert('Nope! This button does nothing.')">Next Month (does nothing)</button>
+  <button onclick="alert('Still nothing.')">Add Event (also useless)</button>
+  <button onclick="confetti()">Celebrate a Random Day 🎉</button>
+
+  <script>
+    function generateUselessCalendar() {
+      const daysContainer = document.getElementById('calendar-days');
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+
+      // Get first day and total days of current month
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      // Add blank days before first day
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.classList.add('day');
+        empty.innerHTML = "🌫️";
+        daysContainer.appendChild(empty);
+      }
+
+      // Add actual days
+      for (let i = 1; i <= totalDays; i++) {
+        const day = document.createElement('div');
+        day.classList.add('day');
+        day.textContent = i;
+        daysContainer.appendChild(day);
+      }
+    }
+
+    function confetti() {
+      const day = Math.floor(Math.random() * 28) + 1;
+      alert(`🎉 Celebrate Day ${day} for no reason! 🎉`);
+    }
+
+    generateUselessCalendar();
+  </script>
+</body>
+</html>

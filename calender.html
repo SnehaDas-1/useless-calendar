@@ -1,0 +1,87 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Skipping Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .day, .date {
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 5px;
+    }
+    .date {
+      cursor: pointer;
+    }
+    .skipped {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="monthYear"></h1>
+  <div class="calendar" id="calendar">
+    <!-- Days and dates will be added via JavaScript -->
+  </div>
+
+  <script>
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const calendar = document.getElementById("calendar");
+    const monthYear = document.getElementById("monthYear");
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    // Show Month and Year
+    monthYear.textContent = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    // Add weekday names
+    days.forEach(day => {
+      const el = document.createElement("div");
+      el.className = "day";
+      el.textContent = day;
+      calendar.appendChild(el);
+    });
+
+    // Add empty cells before the first day
+    for (let i = 0; i < firstDay; i++) {
+      calendar.appendChild(document.createElement("div"));
+    }
+
+    // Pick 10 random dates to skip
+    const skipCount = 10;
+    const skipDates = new Set();
+    while (skipDates.size < skipCount) {
+      skipDates.add(Math.floor(Math.random() * lastDate) + 1);
+    }
+
+    // Add date cells
+    for (let date = 1; date <= lastDate; date++) {
+      const el = document.createElement("div");
+      el.className = "date";
+      el.textContent = date;
+      if (skipDates.has(date)) {
+        el.classList.add("skipped");
+      }
+      calendar.appendChild(el);
+    }
+  </script>
+</body>
+</html>
